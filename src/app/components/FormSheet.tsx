@@ -7,7 +7,7 @@ import { createGoogleDriveFolder } from "../utils/createGoogleDriveFolder";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Spinner } from "@/components/Spinner";
-
+import Image from "next/image";
 
 
 const FormSheet = () => {
@@ -131,7 +131,7 @@ const FormSheet = () => {
       folderId,
       session.accessToken
     );
-    let updatedForm = { ...formData }; // ตัวแปรกลาง
+    const updatedForm = { ...formData }; // ตัวแปรกลาง
     if (
       pictureZoomOutRef.current &&
       pictureZoomOutRef.current.files &&
@@ -183,6 +183,7 @@ const FormSheet = () => {
         updatedForm.pictureZoomOutRef = newPictureId;
         console.log(updatedForm.pictureZoomOutRef);
       } catch (error) {
+         console.error(error);
         const isOffline = !navigator.onLine;
         setUploadedFiles((prev) =>
           prev.map((f) =>
@@ -252,6 +253,7 @@ const FormSheet = () => {
         console.log(updatedForm.pictureZoomInRef);
 
       } catch (error) {
+         console.error(error);
         const isOffline = !navigator.onLine;
         setUploadedFiles((prev) =>
           prev.map((f) =>
@@ -273,7 +275,7 @@ const FormSheet = () => {
       picturesRef.current.files &&
       picturesRef.current.files.length > 0
     ) {
-      let files = picturesRef.current.files;
+      const files = picturesRef.current.files;
       const folderName = "picturesRef";
       const newFolder = await createGoogleDriveFolder(
         folderName,
@@ -327,6 +329,7 @@ const FormSheet = () => {
             )
           );
         } catch (error) {
+           console.error(error);
           const isOffline = !navigator.onLine;
           setUploadedFiles((prev) =>
             prev.map((f) =>
@@ -353,7 +356,7 @@ const FormSheet = () => {
       picturesRefAfter.current.files &&
       picturesRefAfter.current.files.length > 0
     ) {
-      let files = picturesRefAfter.current.files;
+      const files = picturesRefAfter.current.files;
       const folderName = "picturesRefAfter";
       const newFolder = await createGoogleDriveFolder(
         folderName,
@@ -405,6 +408,7 @@ const FormSheet = () => {
             )
           );
         } catch (error) {
+           console.error(error);
           const isOffline = !navigator.onLine;
           setUploadedFiles((prev) =>
             prev.map((f) =>
@@ -430,7 +434,7 @@ const FormSheet = () => {
     setFormData(updatedForm);
 
     try {
-      const res = await fetch("/api/append", {
+       await fetch("/api/append", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -485,14 +489,6 @@ const FormSheet = () => {
     }
   };
 
-  const updatePicturesRef = (newFolderId: string, key: string) => {
-    console.log("ทำงาน...");
-    setFormData((prev) => ({
-      ...prev,
-      [key]: newFolderId,
-    }));
-  };
-
   const retryUpload = async (file: FileDetails) => {
     if (!file.fileObj || !session?.accessToken) return;
 
@@ -526,6 +522,7 @@ const FormSheet = () => {
         )
       );
     } catch (err) {
+       console.error(err);
       setUploadedFiles((prev) =>
         prev.map((f) =>
           f.name === file.name
@@ -697,7 +694,7 @@ const FormSheet = () => {
             required
               />
               {previewZoomOut && (
-                <img
+                <Image
                   src={previewZoomOut}
                   alt="ZoomOut Preview"
                   className="mt-2 w-full max-w-xs rounded border"
@@ -722,7 +719,7 @@ const FormSheet = () => {
             required
               />
               {previewZoomIn && (
-                <img
+                <Image
                   src={previewZoomIn}
                   alt="ZoomIn Preview"
                   className="mt-2 w-full max-w-xs rounded border"
@@ -749,7 +746,7 @@ const FormSheet = () => {
               {previewMultiple.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-4">
                   {previewMultiple.map((src, index) => (
-                    <img
+                    <Image
                       key={index}
                       src={src}
                       alt={`Multiple Preview ${index + 1}`}
@@ -817,7 +814,7 @@ const FormSheet = () => {
             {previewMultipleAfter.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-4">
                 {previewMultipleAfter.map((src, index) => (
-                  <img
+                  <Image
                     key={index}
                     src={src}
                     alt={`Multiple Preview ${index + 1}`}

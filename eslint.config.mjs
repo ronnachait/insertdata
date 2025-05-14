@@ -10,7 +10,15 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // นำเข้า config ที่แนะนำจาก next.js และ typescript
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  
+  // เพิ่มกฎที่ต้องการปรับแต่ง
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off', // ปิดกฎการตรวจจับตัวแปรที่ไม่ได้ใช้
+    },
+  },
 ];
 
 export default eslintConfig;

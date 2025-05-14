@@ -18,6 +18,18 @@ export default function UploadButton() {
     fileObj: File | null;
   }
 
+interface GoogleDriveFile {
+  id: string;
+  name: string;
+  mimeType: string;
+  parents: string[];
+  createdTime: string;
+  modifiedTime: string;
+  // เพิ่มคุณสมบัติอื่น ๆ ตามที่ต้องการ
+}
+
+
+
   useEffect(() => {
     const updateOnlineStatus = () => {
       if (!navigator.onLine) {
@@ -35,8 +47,6 @@ export default function UploadButton() {
 
   const handleUpload = async (files: FileList) => {
     if (!session?.accessToken) return;
-
-    const newFiles: FileDetails[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -65,7 +75,7 @@ export default function UploadButton() {
               )
             );
           }
-        );
+         ) as GoogleDriveFile;
 
         setUploadedFiles((prev) =>
           prev.map((f) =>
@@ -80,6 +90,7 @@ export default function UploadButton() {
           )
         );
       } catch (err) {
+        console.log(err)
         const isOffline = !navigator.onLine;
         setUploadedFiles((prev) =>
           prev.map((f) =>
@@ -114,7 +125,7 @@ export default function UploadButton() {
             )
           );
         }
-      );
+      ) as GoogleDriveFile;
 
       setUploadedFiles((prev) =>
         prev.map((f) =>
@@ -129,6 +140,7 @@ export default function UploadButton() {
         )
       );
     } catch (err) {
+      console.log(err)
       setUploadedFiles((prev) =>
         prev.map((f) =>
           f.name === file.name

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import FormSheet from "./components/FormSheet";
 import Navbar from "./components/Navbar";
 export default function Home() {
