@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range,
+    valueInputOption: "USER_ENTERED",
+    requestBody: {
+      values: [[name, email]],
+    },
+  });
 
-## Getting Started
 
-First, run the development server:
+await sheets.spreadsheets.values.update({
+  spreadsheetId,
+  range: "Sheet1!A1:B1",  // กำหนด range ที่จะอัปเดต
+  valueInputOption: "USER_ENTERED",
+  requestBody: {
+    values: [["Updated Name", "Updated Email"]], // ข้อมูลใหม่ที่ต้องการอัปเดต
+  },
+});
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+const response = await sheets.spreadsheets.values.get({
+  spreadsheetId,
+  range: "Sheet1!A1:B10",  // กำหนด range ที่ต้องการดึงข้อมูล
+});
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+console.log(response.data.values); // ข้อมูลที่ดึงมา
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+await sheets.spreadsheets.values.clear({
+  spreadsheetId,
+  range: "Sheet1!A1:B10",  // กำหนด range ที่จะลบข้อมูล
+});
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+await sheets.spreadsheets.batchUpdate({
+  spreadsheetId,
+  requestBody: {
+    requests: [
+      {
+        updateCells: {
+          rows: [
+            {
+              values: [
+                { userEnteredValue: { stringValue: "New Value" } },
+              ],
+            },
+          ],
+          fields: "*",
+          range: {
+            sheetId: 0,
+            startRowIndex: 0,
+            endRowIndex: 1,
+            startColumnIndex: 0,
+            endColumnIndex: 1,
+          },
+        },
+      },
+      // คุณสามารถเพิ่มการเปลี่ยนแปลงหลาย ๆ แบบได้ที่นี่
+    ],
+  },
+});
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+const response = await sheets.spreadsheets.values.batchGet({
+  spreadsheetId,
+  ranges: ["Sheet1!A1:B10", "Sheet1!C1:D10"], // กำหนดหลาย range
+});
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+console.log(response.data.valueRanges); // ข้อมูลที่ดึงมา
